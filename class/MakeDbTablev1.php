@@ -43,6 +43,10 @@ abstract class MakeDbTable extends MakeDbTableAbstract {
 	 */
 	function __construct($config,$dbname,$namespace) {
 		parent::__construct($config, $dbname,$namespace);
+                
+                // set default template path for zfw 1.x
+                $this->setTemplatePath(dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'templates-v1');
+                
 		$this->_addRequire = $config['include.addrequire'];
 		$path = $this->_config['include.path'];
 		
@@ -123,7 +127,7 @@ abstract class MakeDbTable extends MakeDbTableAbstract {
 
 		$vars = array('referenceMap' => $referenceMap, 'dependentTables' => $dependentTables);
 
-		$dbTableData=$this->getParsedTplContents('dbtable.tpl', 1,$vars);
+		$dbTableData=$this->getParsedTplContents('dbtable.tpl', $vars);
 
 		if (!file_put_contents($dbTableFile,$dbTableData))
 			die("Error: could not write db table file $dbTableFile.");
@@ -147,7 +151,7 @@ abstract class MakeDbTable extends MakeDbTableAbstract {
 
 		$mapperFile=$this->getLocation().DIRECTORY_SEPARATOR.'mappers'.DIRECTORY_SEPARATOR.$this->_className.'.php';
 
-		$mapperData=$this->getParsedTplContents('mapper.tpl',1);
+		$mapperData=$this->getParsedTplContents('mapper.tpl');
 
 		if (!file_put_contents($mapperFile,$mapperData)) {
 			die("Error: could not write mapper file $mapperFile.");
@@ -171,7 +175,7 @@ abstract class MakeDbTable extends MakeDbTableAbstract {
 
 		$modelFile=$this->getLocation().DIRECTORY_SEPARATOR.$this->_className.'.php';
 
-		$modelData=$this->getParsedTplContents('model.tpl',1);
+		$modelData=$this->getParsedTplContents('model.tpl');
 
 		if (!file_put_contents($modelFile,$modelData)) {
 			die("Error: could not write model file $modelFile.");
@@ -191,25 +195,25 @@ abstract class MakeDbTable extends MakeDbTableAbstract {
 		$this->makeModelFile();
 
 		$modelFile=$this->getLocation().DIRECTORY_SEPARATOR.'ModelAbstract.php';
-		$modelData=$this->getParsedTplContents('model_class.tpl',1);
+		$modelData=$this->getParsedTplContents('model_class.tpl');
 
 		if (!file_put_contents($modelFile, $modelData))
 			die("Error: could not write model file $modelFile.");
 
 		$paginatorFile=$this->getLocation().DIRECTORY_SEPARATOR.'Paginator.php';
-		$paginatorData=$this->getParsedTplContents('paginator_class.tpl',1);
+		$paginatorData=$this->getParsedTplContents('paginator_class.tpl');
 
 		if (!file_put_contents($paginatorFile, $paginatorData))
 			die("Error: could not write model file $paginatorFile.");
 
 		$mapperFile=$this->getLocation().DIRECTORY_SEPARATOR.'mappers'.DIRECTORY_SEPARATOR.'MapperAbstract.php';
-		$mapperData=$this->getParsedTplContents('mapper_class.tpl',1);
+		$mapperData=$this->getParsedTplContents('mapper_class.tpl');
 
 		if (!file_put_contents($mapperFile, $mapperData))
 			die("Error: could not write mapper file $mapperFile.");
 
 		$tableFile=$this->getLocation().DIRECTORY_SEPARATOR.'DbTable'.DIRECTORY_SEPARATOR.'TableAbstract.php';
-		$tableData=$this->getParsedTplContents('dbtable_class.tpl',1);
+		$tableData=$this->getParsedTplContents('dbtable_class.tpl');
 
 		if (!file_put_contents($tableFile, $tableData))
 			die("Error: could not write model file $tableFile.");

@@ -15,8 +15,10 @@ Instructions:
 parameters:
     --database            : database name (required option)
     --location            : specify where to create the files (default is current directory)
+    --templates           : specify the location of the templates (default is "templates")
     --namespace           : override config file's default namespace
  *  --table               : table name (parameter can be used more then once)
+    --table-prefix        : remove that prefix of table name (can be used more then once)
     --all-tables          : create classes for all the scripts in the database
  *  --ignore-table        : not to create a class for a specific table
  *  --ignore-tables-regex : ignore tables by perl regular expression

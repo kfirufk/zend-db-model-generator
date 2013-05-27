@@ -1,3 +1,11 @@
+2013-05-27 v.richert@addmore.de
+    - add option to select template path
+    - add option to add other table prefixes
+    - add ASSOC option to fetch
+    - change template handling for different zfw by using setTemplatePath
+    - add a different template version using a value store instead of member
+      variables
+
 Mon Jun 18 09:15:17 IDT 2012 kfirufk@gmail.com
 version 0.7 rc2 is out!
     - merged with pedrospdc branch so this patch only includes his fixes.

@@ -66,6 +66,7 @@ if (sizeof($tables) == 0) {
 }
 
 $path='';
+
 //die(dirname(__FILE__).DIRECTORY_SEPARATOR.$params['--database'][0]);
 if (sizeof($params['--location']) == 1) {
     // Check if a relative path
@@ -76,9 +77,22 @@ if (sizeof($params['--location']) == 1) {
     }
     $cls->setLocation($path);
     $path .= DIRECTORY_SEPARATOR;
+$cls->addTablePrefixes($params['--table-prefix']);
 } else {
     $cls->setLocation(dirname(__FILE__).DIRECTORY_SEPARATOR.$params['--database'][0]);
     $path=dirname(__FILE__).DIRECTORY_SEPARATOR.$params['--database'][0].DIRECTORY_SEPARATOR;
+}
+
+$templatepath='';
+
+if (sizeof($params['--templates']) == 1) {
+  // Check if a relative path
+  if (! realpath($params['--templates'][0])) {
+    $templatepath = realpath(dirname(__FILE__).DIRECTORY_SEPARATOR.$params['--templates'][0]);
+  } else {
+    $templatepath = realpath($params['--templates'][0]);
+  }
+  $cls->setTemplatePath($templatepath);
 }
 
 switch ($config['default_zend_framework_version']) {
@@ -103,6 +117,8 @@ switch ($config['default_zend_framework_version']) {
 
 
 $cls->setTableList($tables);
+
+$cls->addTablePrefixes($params['--table-prefix']);
 
 foreach ($tables as $table) {
     $cls->setTableName($table);

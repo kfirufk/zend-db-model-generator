@@ -19,8 +19,10 @@ class ArgvParser {
 parameters:
     --database            : database name
     --location            : specify where to create the files (default is current directory)
+    --templates           : specify the location of the templates (default is "templates")
     --namespace           : override config file's default namespace
  *  --table               : table name (parameter can be used more then once)
+    --table-prefix        : remove that prefix of table name (can be used more then once)
     --all-tables          : create classes for all the scripts in the database
  *  --ignore-table        : not to create a class for a specific table
  *  --ignore-tables-regex : ignore tables by perl regular expression
@@ -45,7 +47,10 @@ USAGE;
                 '--ignore-table'=>array(),
                 '--ignore-tables-regex'=>array(),
                 '--tables-regex'=>array(),
-        		'--zfv'=>array()
+                '--tables-regex'=>array(),
+                '--templates'=>array(),
+                '--table-prefix'=>array(),
+      		'--zfv'=>array()
             );
         $argv=$this->_argv;
         array_shift($argv);
@@ -66,8 +71,10 @@ USAGE;
                 die("error: namespace parameter can't be used more than once\n".$this->getUsage());
         if (sizeof($params['--location'])>1)
                 die("error: location parameter can't be used more than once\n".$this->getUsage());
+        if (sizeof($params['--templates'])>1)
+                die("error: templates parameter can't be used more than once\n".$this->getUsage());
         if (sizeof($params['--zfv'])>1) 
-        		die("error: zend framework version parameter can't be used more then once\n".$this->getUsage());
+        	die("error: zend framework version parameter can't be used more then once\n".$this->getUsage());
         return $params;
 
     }
@@ -97,10 +104,9 @@ USAGE;
         }
 
         $res=array();
-        
-        foreach (array_keys($tables)  as $table)
+
+        foreach (array_keys($tables) as $table)
             $res[]=$table;
-       
         return $res;
     }
 

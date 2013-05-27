@@ -6,13 +6,16 @@ abstract class MakeDbTable extends  MakeDbTableAbstract {
 
 	function __construct($config,$dbname,$namespace) {
 		parent::__construct($config, $dbname,$namespace);
+                
+                // set default template path for zfw 2.x
+                $this->setTemplatePath(dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'templates-v2');
 	}
 	
 	function doItAll() {
 		$fooFile=$this->getLocation().DIRECTORY_SEPARATOR.$this->_className.".php";
-		$fooData=$this->getParsedTplContents('Foo.phtml', 2);
+		$fooData=$this->getParsedTplContents('Foo.phtml');
 		$fooTableFile=$this->getLocation().DIRECTORY_SEPARATOR.$this->_className."Table.php";
-		$fooTableData=$this->getParsedTplContents('FooTable.phtml', 2);
+		$fooTableData=$this->getParsedTplContents('FooTable.phtml');
 	
 		$templatesDir=realpath(dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'templates-v2').DIRECTORY_SEPARATOR;
 		
