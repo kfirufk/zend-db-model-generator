@@ -109,6 +109,27 @@ class <?=$this->_className?>Table extends AbstractTableGateway
         }
         return $row;
     }
+    
+     public function match<?=$this->_className?>(<?= join($columnsWithoutPrimaryKeysAsVars,", ");?>)
+    {
+        $select = $this->getSelect();
+        <?php foreach ($columnsWithoutPrimaryKeys as $column): ?>
+        if ($<?=$column?> != null) {
+        	$select->where->like('<?=$column?>' ,'%'.$<?=$column?>.'%');
+        }
+        <?php endforeach;?>
+        $statement = $this->getSql()->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
+        $ret = $result->current();
+        if ($ret !== false) {
+        	$ret = array($ret);
+            while (($line=$result->next()) !== false ) {
+        		$ret[]=$line;
+        	}
+        }
+        return $ret;
+    }
+    
 
     public function save<?=$this->_className?>(<?=$this->_className?> $<?=$this->_tbname?>)
     {
@@ -146,7 +167,8 @@ class <?=$this->_className?>Table extends AbstractTableGateway
         return $affectedRows;
         <?php endif;?>
     }
-
+    
+   
     public function update<?=$this->_className?>($<?=$this->_primaryKey['field']?>, <?= join($columnsWithoutPrimaryKeysAsVars,", "); ?>)
     {
         $data = array(
