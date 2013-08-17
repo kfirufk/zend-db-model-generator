@@ -403,6 +403,14 @@ abstract class MakeDbTableAbstract {
     abstract protected function _convertTypeToPhp($str);
 
     public function parseTable() {
+        // Ensure table specific data is reset
+        $this->_primaryKey = null;
+        $this->_columns = array();
+        $this->_softDeleteColumn = null;
+        $this->_classDesc = null;
+        $this->_foreignKeysInfo = array();
+        $this->_dependentTables = array();
+
         $this->parseDescribeTable();
         $this->parseForeignKeys();
         $this->parseDependentTables();
@@ -427,9 +435,6 @@ abstract class MakeDbTableAbstract {
      * @param String $namespace
      */
     function __construct($config, $dbname, $namespace) {
-
-        $columns = array();
-        $primaryKey = array();
         $this->_namespace = $namespace;
 
 

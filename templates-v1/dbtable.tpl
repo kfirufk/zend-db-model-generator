@@ -9,14 +9,14 @@
  * @copyright <?=$this->_copyright."\n"?>
  * @license <?=$this->_license."\n"?>
  */
-<? if ($this->_addRequire): ?>
+<?php if ($this->_addRequire): ?>
 
 /**
  * Abstract class for <?=$this->_namespace?>_Model_DbTables
  * @see <?=$this->_includeTable->getParentClass() . "\n"?>
  */
 require_once 'TableAbstract.php';
-<? endif; ?>
+<?php endif; ?>
 
 /**
  * Table definition for <?=$this->getTableName()."\n"?>

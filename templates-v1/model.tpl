@@ -9,7 +9,7 @@
  * @copyright <?=$this->_copyright."\n"?>
  * @license <?=$this->_license."\n"?>
  */
-<? if ($this->_addRequire):?>
+<?php if ($this->_addRequire):?>
 
 /**
  * Data Mapper implementation for this class
@@ -21,7 +21,7 @@ require_once dirname(__FILE__) . '/mappers/<?=$this->_className?>.php';
  * Abstract class for models
  */
 require_once 'ModelAbstract.php';
-<? endif; ?>
+<?php endif; ?>
 
 
 /**

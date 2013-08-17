@@ -28,9 +28,9 @@ require_once dirname(__FILE__) . '/../DbTable/<?=$this->_className?>.php';
 class <?=$this->_namespace?>_Model_Mapper_<?=$this->_className?> extends <?=$this->_includeMapper->getParentClass() . "\n"?>
 {
 <?php $vars = $this->_includeMapper->getVars();
-if (! empty($vars)) {
-echo "\n$vars\n";
-}
+if (! empty($vars)):
+    echo "\n$vars\n";
+endif;
 ?>
     /**
      * Returns an array, keys are the field names.
@@ -83,11 +83,11 @@ foreach ($this->_columns as $column):
      *
      * @param <?=$this->_namespace?>_Model_<?=$this->_className?> $model The model to <?php if ($this->_softDeleteColumn != null): ?>mark as deleted
 <?php else: ?>delete
-<?php endif;?>
+<?php endif; ?>
      * @param boolean $useTransaction Flag to indicate if delete should be done inside a database transaction
 <?php if ($this->_softDeleteColumn == null): ?>
      * @see <?=$this->_namespace?>_Model_DbTable_TableAbstract::delete()
-<?php endif;?>
+<?php endif; ?>
      * @return int
      */
     public function delete($model, $useTransaction = true)
@@ -112,17 +112,17 @@ foreach ($this->_columns as $column):
         try {
 <?php if ($this->_softDeleteColumn != null):
         foreach ($this->_columns as $column):
-            if ($column['field'] == $this->_softDeleteColumn) {?>
+            if ($column['field'] == $this->_softDeleteColumn):?>
             $model->set<?=$column['capital']?>(<?php
-                if ($column['phptype'] == 'boolean') {
+                if ($column['phptype'] == 'boolean'):
                     echo 'true';
-                } elseif (preg_match('/date/', $column['type'])) {
-                        echo 'Zend_Date::now()';
-                } else {
+                elseif (preg_match('/date/', $column['type'])):
+                    echo 'Zend_Date::now()';
+                else:
                     echo '1';
-                }
+                endif;
                 break;
-            }
+            endif;
         endforeach;?>);
             $result = $model->save();
 <?php else: ?>
@@ -145,6 +145,7 @@ foreach ($this->_columns as $column):
             $where = $this->getDbTable()->getAdapter()->quoteInto('<?=$this->_primaryKey['field']?> = ?', $model->get<?=$this->_primaryKey['capital']?>());
 <?php endif; ?>
             $result = $this->getDbTable()->delete($where);
+<?php endif; ?>
 
             if ($useTransaction) {
                 $this->getDbTable()->getAdapter()->commit();
@@ -152,6 +153,16 @@ foreach ($this->_columns as $column):
         } catch (Exception $e) {
 <?php if (! empty($this->_loggerName)):?>
             $message = 'Exception encountered while attempting to delete ' . get_class($this);
+<?php if ($this->_softDeleteColumn != null): ?>
+<?php if ($this->_primaryKey['phptype'] == 'array') : ?>
+            $message .= ' for PK';
+            foreach ($where as $where_clause) {
+                $message .= ' <?=$this->_primaryKey['capital']?>: ' . $model->get<?=$this->_primaryKey['capital']?>();
+            }
+<?php else: ?>
+            $message .= ' for <?=$this->_primaryKey['capital']?>: ' . $model->get<?=$this->_primaryKey['capital']?>();
+<?php endif; ?>
+<?php else: ?>
             if (! empty($where)) {
                 $message .= ' Where: ';
 <?php if ($this->_primaryKey['phptype'] == 'array') : ?>
@@ -164,7 +175,7 @@ foreach ($this->_columns as $column):
             } else {
                 $message .= ' with an empty where';
             }
-
+<?php endif; ?>
             $message .= ' Exception: ' . $e->getMessage();
             $this->_logger->log($message, Zend_Log::ERR);
             $this->_logger->log($e->getTraceAsString(), Zend_Log::DEBUG);
@@ -177,7 +188,6 @@ foreach ($this->_columns as $column):
         }
 
         return $result;
-<?php endif; ?>
     }
 
     /**
@@ -260,19 +270,19 @@ foreach ($this->_columns as $column):
                 $this->getDbTable()
                      ->update($data,
                               array(<?php echo "\n                                 ";
-            if ($this->_primaryKey['phptype'] == 'array') {
+            if ($this->_primaryKey['phptype'] == 'array'):
                 $fields = count($this->_primaryKey['fields']);
                 $i = 0;
-                foreach ($this->_primaryKey['fields'] as $key) {
+                foreach ($this->_primaryKey['fields'] as $key):
                     echo '\'' . $key['field'] . ' = ?\' => $primary_key[\'' . $key['field'] . '\']';
                     $i++;
-                    if ($i != $fields) {
+                    if ($i != $fields):
                         echo ",\n                                 ";
-                    }
-                }
-            } else {
+                    endif;
+                endforeach;
+            else:
                 echo '\'' . $this->_primaryKey['field'] . ' = ?\' => $primary_key';
-            }
+            endif;
             echo "\n";?>
                               )
                 );
@@ -396,16 +406,16 @@ foreach ($this->_columns as $column):
             $entry<?php
                 $count = count($this->_columns);
                 foreach ($this->_columns as $column):
-                $count--;
-              ?>->set<?=$column['capital']?>($data['<?=$column['field']?>'])<?if ($count> 0) echo "\n                  ";
-              endforeach; ?>;
+                    $count--;
+              ?>->set<?=$column['capital']?>($data['<?=$column['field']?>'])<?php if ($count> 0) echo "\n                  ";
+                endforeach; ?>;
         } elseif ($data instanceof Zend_Db_Table_Row_Abstract || $data instanceof stdClass) {
             $entry<?php
                 $count = count($this->_columns);
                 foreach ($this->_columns as $column):
-                $count--;
-              ?>->set<?=$column['capital']?>($data-><?=$column['field']?>)<?if ($count> 0) echo "\n                  ";
-              endforeach; ?>;
+                    $count--;
+              ?>->set<?=$column['capital']?>($data-><?=$column['field']?>)<?php if ($count> 0) echo "\n                  ";
+                endforeach; ?>;
         }
 
         $entry->setMapper($this);
@@ -413,7 +423,7 @@ foreach ($this->_columns as $column):
         return $entry;
     }
 <?php $functions = $this->_includeMapper->getFunctions();
-if (! empty($functions)) {
-echo "\n$functions\n";
-} ?>
+if (! empty($functions)):
+    echo "\n$functions\n";
+endif; ?>
 }

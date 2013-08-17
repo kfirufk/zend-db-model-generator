@@ -8,11 +8,11 @@ class Make_mysql extends MakeDbTable {
     protected function getPDOString($host, $port = 3306, $dbname) {
         return "mysql:host=$host;port=$port;dbname=$dbname";
     }
-    
+
     protected function getPDOSocketString($host, $dbname) {
     	return "mysql:unix_socket=$host;dbname=$dbname";
     }
-    
+
 
 	public function getTablesNamesFromDb() {
 		$res = $this->_pdo->query('show tables')->fetchAll();
@@ -234,7 +234,7 @@ class Make_mysql extends MakeDbTable {
 
 
 			if (in_array(strtolower($row['Field']), $this->_softDeleteColumnNames)) {
-			    $this->_softDeleteColumn = $row['name'];
+			    $this->_softDeleteColumn = $row['Field'];
 			}
 		}
 
