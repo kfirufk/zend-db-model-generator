@@ -12,7 +12,7 @@ require_once('config/config.php');
 require_once('class/ArgvParser.php');
 
 
-if (!ini_get('short_open_tag')) {
+if (!ini_get('short_open_tag') && version_compare(PHP_VERSION, '5.4.0') < 0) {
     die("please enable short_open_tag directive in php.ini\n");
 }
 
