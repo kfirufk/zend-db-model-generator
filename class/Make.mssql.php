@@ -72,6 +72,10 @@ class Make_mssql extends MakeDbTable {
         return $res;
     }
 
+    public function getDateTimeFormat() {
+        return "'YYYY-MM-ddTHH:mm:ss.S'";
+    }
+
     public function parseForeignKeys() {
         $tbname = $this->getTableName();
         // $this->_pdo->query("SET NAMES UTF8");

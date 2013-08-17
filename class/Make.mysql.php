@@ -24,8 +24,11 @@ class Make_mysql extends MakeDbTable {
 		return $tables;
 	}
 
+    public function getDateTimeFormat() {
+        return "'YYYY-MM-ddTHH:mm:ss.S'";
+    }
 
-	/**
+    	/**
 	 * converts MySQL data types to PHP data types
 	 *
 	 * @param string $str

@@ -427,6 +427,11 @@ abstract class MakeDbTableAbstract {
     abstract protected function getPDOSocketString($socket, $dbname);
 
     /**
+     * Return the format for Zend_Date::toString()
+     */
+    abstract public function getDateTimeFormat();
+
+    /**
      *
      *  the class constructor
      *

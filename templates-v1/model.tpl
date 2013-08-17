@@ -122,13 +122,7 @@ echo "$vars\n\n";
                 $data = new Zend_Date($data);
             }
 
-<?php
-$db = get_class($this);
-if (stripos($db, 'mssql') !== false || stripos($db, 'dblib') !== false || stripos($db, 'sqlsrv') !== false): ?>
-            $data = $data->toString('YYYY-MM-ddTHH:mm:ss.S');
-<?php else: ?>
-            $data = $data->toString(Zend_Date::ISO_8601);
-<?php endif; ?>
+            $data = $data->toString(<?php echo $this->getDateTimeFormat() ?>);
         }
 
 <?php endif; ?>
@@ -154,13 +148,7 @@ if (stripos($db, 'mssql') !== false || stripos($db, 'dblib') !== false || stripo
                 return null;
             }
 
-<?php
-$db = get_class($this);
-if (stripos($db, 'mssql') !== false || stripos($db, 'dblib') !== false || stripos($db, 'sqlsrv') !== false): ?>
-            return new Zend_Date($this->_<?=$column['capital']?>, 'YYYY-MM-ddTHH:mm:ss.S');
-<?php else: ?>
-            return new Zend_Date($this->_<?=$column['capital']?>, Zend_Date::ISO_8601);
-<?php endif; ?>
+            return new Zend_Date($this->_<?=$column['capital']?>, <?php echo $this->getDateTimeFormat() ?>);
         }
 
         return $this->_<?=$column['capital']?>;
