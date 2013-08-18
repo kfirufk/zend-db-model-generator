@@ -5,18 +5,25 @@
  */
 class Make_pgsql extends MakeDbTable {
 	private $_dataTypes = array(
-			/* Numeric Types */
-			'smallint' => 'int', 'integer' => 'int', 'bigint' => 'float', 'decimal' => 'float', 'numeric' => 'float', 'real' => 'float', 'double precision' => 'float', 'serial' => 'int', 'bigserial' => 'float',
-			/* Monetary Types */
-			'money' => 'float',
-			/* Character Types */
-			'character varyin' => 'string', 'varchar' => 'string', 'character' => 'string', 'char' => 'string', 'text' => 'string',
-			/* Binary Data Types */
-			'bytea' => 'string',
-			/* Date/Time Types */
-
-			/* Boolean Type */
-	'boolean' => 'boolean' );
+        /* Numeric Types */
+        'smallint' => 'int', 'integer' => 'int', 'bigint' => 'float',
+        'decimal' => 'float', 'numeric' => 'float', 'real' => 'float',
+        'double precision' => 'float', 'serial' => 'int', 'bigserial' => 'float',
+        /* Monetary Types */
+        'money' => 'float',
+        /* Character Types */
+        'character varyin' => 'string', 'varchar' => 'string',
+        'character' => 'string', 'char' => 'string', 'text' => 'string',
+        /* Binary Data Types */
+        'bytea' => 'string',
+        /* Date/Time Types */
+        'timestamp' => 'string', 'timestamp with time zone' => 'string',
+        'timestamptz' => 'string', 'timestamp without time zone' => 'string',
+        'date' => 'string', 'time' => 'string', 'time without time zone' => 'string',
+        'time with time zone' => 'string',
+        /* Boolean Type */
+        'boolean' => 'boolean'
+    );
 
 	protected function getPDOString($host, $port = 3306, $dbname) {
 		return "pgsql:host=$host;port=$port;dbname=$dbname";
@@ -49,8 +56,40 @@ class Make_pgsql extends MakeDbTable {
 		return 'string';
 	}
 
-    public function getDateTimeFormat() {
-        return 'Zend_Date::ISO_8601';
+    public function isDateTime($field, $type)
+    {
+        $types = array('date', 'time', 'timestamp');
+        // TODO: Add support for interval
+        foreach ($types as $dataType) {
+            if (false !== strpos($type, $dataType)) {
+                return true;
+            }
+        }
+        if (in_array(strtolower($field), $this->_timestampColumnNames)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getDateTimeFormat($type) {
+        if (preg_match('/timestamp(tz|.+with time zone)/', $type)) {
+            return 'Zend_Date::ISO_8601';
+        } elseif (false !== strpos($type, 'timestamp')) {
+            return "'YYYY-MM-ddTHH:mm:ss.S'";
+        } elseif (preg_match('/time(tz|.+with time zone)/', $type)) {
+            return "'HH:mm:ss.SZ'";
+        } elseif (false !== strpos($type, 'time')) {
+            return "'HH:mm:ss.S'";
+        } elseif (false !== strpos($type, 'date')) {
+            return "'YYYY-MM-dd'";
+        } elseif (false !== strpos($type, 'int')) {
+            return 'Zend_Date::TIMESTAMP';
+        } elseif (false !== strpos($type, 'char')) {
+            return 'Zend_Date::ISO_8601';
+        } else {
+            throw new Exception("Unexpected datetime type: " . $type);
+        }
     }
 
 	public function parseForeignKeys() {

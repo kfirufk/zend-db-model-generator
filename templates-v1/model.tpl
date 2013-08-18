@@ -105,10 +105,10 @@ echo "$vars\n\n";
 <?php foreach ($this->_columns as $column): ?>
 
     /**
-     * Sets column <?=$column['field']?><?php if (strpos($column['type'], 'datetime') !== false): ?>. Stored in ISO 8601 format.<?php endif; echo "\n";?>
+     * Sets column <?=$column['field']?><?php if ($this->isDateTime($column['field'], $column['type'])): ?>. Stored in <?php echo $this->getDateTimeFormat($column['type']) ?> format.<?php endif; echo "\n";?>
      *
-<?php if (strpos($column['type'], 'datetime') !== false): ?>
-     * @param string|Zend_Date $date
+<?php if ($this->isDateTime($column['field'], $column['type'])): ?>
+     * @param string|Zend_Date $date Date or <?php echo $this->getDateTimeFormat($column['type']) ?> formatted string
 <?php else: ?>
      * @param <?=$column['phptype']?> $data
 <?php endif; ?>
@@ -116,13 +116,13 @@ echo "$vars\n\n";
      */
     public function set<?=$column['capital']?>($data)
     {
-<?php if (strpos($column['type'], 'datetime') !== false): ?>
+<?php if ($this->isDateTime($column['field'], $column['type'])): ?>
         if (! empty($data)) {
             if (! $data instanceof Zend_Date) {
                 $data = new Zend_Date($data);
             }
 
-            $data = $data->toString(<?php echo $this->getDateTimeFormat() ?>);
+            $data = $data->toString(<?php echo $this->getDateTimeFormat($column['type']) ?>);
         }
 
 <?php endif; ?>
@@ -133,22 +133,22 @@ echo "$vars\n\n";
     /**
      * Gets column <?=$column['field'] . "\n"?>
      *
-<?php if (strpos($column['type'], 'datetime') !== false): ?>
+<?php if ($this->isDateTime($column['field'], $column['type'])): ?>
      * @param boolean $returnZendDate
      * @return Zend_Date|null|string Zend_Date representation of this datetime if enabled, or ISO 8601 string if not
 <?php else: ?>
      * @return <?=$column['phptype'] . "\n"?>
 <?php endif; ?>
      */
-    public function get<?=$column['capital']?>(<?php if (strpos($column['type'], 'datetime') !== false): ?>$returnZendDate = false<?php endif;?>)
+    public function get<?=$column['capital']?>(<?php if ($this->isDateTime($column['field'], $column['type'])): ?>$returnZendDate = false<?php endif;?>)
     {
-<?php if (strpos($column['type'], 'datetime') !== false): ?>
+<?php if ($this->isDateTime($column['field'], $column['type'])): ?>
         if ($returnZendDate) {
             if ($this->_<?=$column['capital']?> === null) {
                 return null;
             }
 
-            return new Zend_Date($this->_<?=$column['capital']?>, <?php echo $this->getDateTimeFormat() ?>);
+            return new Zend_Date($this->_<?=$column['capital']?>, <?php echo $this->getDateTimeFormat($column['type']) ?>);
         }
 
         return $this->_<?=$column['capital']?>;

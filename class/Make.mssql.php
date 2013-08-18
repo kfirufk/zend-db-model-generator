@@ -72,8 +72,57 @@ class Make_mssql extends MakeDbTable {
         return $res;
     }
 
-    public function getDateTimeFormat() {
-        return "'YYYY-MM-ddTHH:mm:ss.S'";
+    public function isDateTime($field, $type)
+    {
+        // Ignore MS-SQL timestamp/rowversion fields (actually binary data)
+        if ('timestamp' == strtolower($type)) {
+            return false;
+        }
+        $types = array('date', 'time');
+        foreach ($types as $dataType) {
+            if (false !== stripos($type, $dataType)) {
+                return true;
+            }
+        }
+        if (in_array(strtolower($field), $this->_timestampColumnNames)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getDateTimeFormat($type) {
+        $format = null;
+        switch (strtolower($type)) {
+            case 'smalldatetime':
+                $format = "'YYYY-MM-dd HH:mm:ss'";
+                break;
+            case 'datetime':
+            case 'datetime2':
+                $format = "'YYYY-MM-dd HH:mm:ss.S'";
+                break;
+            case 'datetimeoffset':
+                $format = "'YYYY-MM-dd HH:mm:ss.S ZZZZ'";
+                break;
+            case 'time':
+                $format = "'HH:mm:ss.S'";
+                break;
+            case 'date':
+                $format = "'YYYY-MM-dd'";
+                break;
+            default:
+                if (false !== strpos($type, 'int')) {
+                    $format = 'Zend_Date::TIMESTAMP';
+                } elseif (false !== strpos($type, 'char')) {
+                    $format = 'Zend_Date::ISO_8601';
+                }
+        }
+
+        if (! $format) {
+            throw new Exception("Unexpected datetime type: " . $type);
+        }
+
+        return $format;
     }
 
     public function parseForeignKeys() {

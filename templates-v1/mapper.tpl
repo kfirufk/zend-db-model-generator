@@ -116,7 +116,7 @@ foreach ($this->_columns as $column):
             $model->set<?=$column['capital']?>(<?php
                 if ($column['phptype'] == 'boolean'):
                     echo 'true';
-                elseif (preg_match('/date/', $column['type'])):
+                elseif ($this->isDateTime($column['field'], $column['type'])):
                     echo 'Zend_Date::now()';
                 else:
                     echo '1';

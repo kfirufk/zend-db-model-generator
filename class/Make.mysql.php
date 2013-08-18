@@ -24,8 +24,42 @@ class Make_mysql extends MakeDbTable {
 		return $tables;
 	}
 
-    public function getDateTimeFormat() {
-        return "'YYYY-MM-ddTHH:mm:ss.S'";
+    public function isDateTime($field, $type)
+    {
+        $types = array('date', 'time', 'timestamp', 'year');
+        return in_array(strtolower($type), $types)
+            || in_array(strtolower($field), $this->_timestampColumnNames);
+    }
+
+    public function getDateTimeFormat($type) {
+        $format = null;
+        switch (strtolower($type)) {
+            case 'timestamp':
+            case 'datetime':
+                $format = "'YYYY-MM-dd HH:mm:ss.S'";
+                break;
+            case 'time':
+                $format = "'HH:mm:ss.S'";
+                break;
+            case 'date':
+                $format = "'YYYY-MM-dd'";
+                break;
+            case 'year':
+                $format = 'Zend_Date::YEAR';
+                break;
+            default:
+                if (false !== strpos($type, 'int')) {
+                    $format = 'Zend_Date::TIMESTAMP';
+                } elseif (false !== strpos($type, 'char')) {
+                    $format = 'Zend_Date::ISO_8601';
+                }
+        }
+
+        if (! $format) {
+            throw new Exception("Unexpected datetime type: " . $type);
+        }
+
+        return $format;
     }
 
     	/**

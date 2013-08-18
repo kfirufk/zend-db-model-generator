@@ -139,6 +139,12 @@ abstract class MakeDbTableAbstract {
     protected $_softDeleteColumnNames = array('deleted', 'is_deleted');
 
     /**
+     * List of column names that indiciate the column is may be a datetime
+     * @var array
+     */
+    protected $_timestampColumnNames = array('timestamp', 'time_stamp', 'datetime');
+
+    /**
      * Name of the column to be used for soft-delete purposes
      * @var string
      */
@@ -427,9 +433,14 @@ abstract class MakeDbTableAbstract {
     abstract protected function getPDOSocketString($socket, $dbname);
 
     /**
+     * Indicate whether the database type is a date/time field.
+     */
+    abstract public function isDateTime($field, $type);
+
+    /**
      * Return the format for Zend_Date::toString()
      */
-    abstract public function getDateTimeFormat();
+    abstract public function getDateTimeFormat($type);
 
     /**
      *
