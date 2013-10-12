@@ -42,6 +42,10 @@ class <?=$this->_className?>Table extends AbstractTableGateway
     protected $table ='<?=$this->_tbname?>';
     protected $tableName ='<?=$this->_tbname?>';
 
+    public function qi($name)  { return $this->adapter->platform->quoteIdentifier($name); }
+    
+    public function fp($name) { return $this->adapter->driver->formatParameterName($name); }
+
     public function __construct(Adapter $adapter)
     {
         $this->adapter = $adapter;
@@ -153,10 +157,15 @@ class <?=$this->_className?>Table extends AbstractTableGateway
 
     public function add<?=$this->_className?>(<?= $paramsForFunction ?>)
     {
-        $data = array(<?php foreach ($columnsWithoutPrimaryKeys as $column): ?>
+        $data = array(<?php foreach ($columnsRequired as $column): ?>
             '<?= $column?>' => $<?= $column?>,
             <?php endforeach; ?>
         );
+        <?php foreach ($columnsNotRequired as $column):?>
+        if ($<?=$column?> != null) {
+        	$data['<?=$column?>'] = $<?=$column ?>;
+        }
+        <?php endforeach?>
         $affectedRows=$this->insert($data);
         <?php if ($this->_returnId):?>
         if ($affectedRows != 1) {

@@ -1,3 +1,26 @@
+2013-10-12
+  - add<TableName> now adds none-required columns only if they are not null.
+    so for example if i have a timestamp column that defaults to now(), and i didn't enter
+    anything in that column, then it will not be added to the insert array and by that
+    will use the default value
+
+2013-10-11
+ - included qi (Quote Identifier) and fp (format Paramaeter Name) functions
+   as a shortcut instead of fetchginf them from driver of adapter.
+   please notice that http://framework.zend.com/manual/2.2/en/modules/zend.db.adapter.html
+   recommends to work with them and uses anonymoous functions. i created regular function
+   for it to work on older php versions.
+
+2013-08-17 
+   - Fix issue 31 by abstracting database specific datetime format
+   - Fix soft delete functionality for Zend 1.x model generation
+   - Ignore short_open_tag directive if running at least 5.4.0
+thanks to Steven Hadfield for his commits :)
+
+2013-08-16 kfirufk@gmail.com
+    - included match<table_name> function for like %?% queries
+    - finally released RC2
+
 2013-05-27 v.richert@addmore.de
     - add option to select template path
     - add option to add other table prefixes
