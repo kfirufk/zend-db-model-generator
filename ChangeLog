@@ -1,3 +1,7 @@
+2013-12-02
+ - update MakeDbTablev1.php fix dependencies names array.
+   fix by volker.richert
+
 2013-10-12
   - add<TableName> now adds none-required columns only if they are not null.
     so for example if i have a timestamp column that defaults to now(), and i didn't enter

@@ -117,7 +117,8 @@ abstract class MakeDbTable extends MakeDbTableAbstract {
 		$dependentTables = '';
 		$dependents = array();
 		foreach ($this->getDependentTables() as $info) {
-			$dependents[] = $this->_getClassName($info['foreign_tbl_name']);
+		//	$dependents[] = $this->_getClassName($info['foreign_tbl_name']);
+			$dependents[] = $this->_namespace . '_Model_DbTable_' . $this->_getClassName($info['foreign_tbl_name']);
 		}
 
 		if (sizeof($dependents) > 0) {
